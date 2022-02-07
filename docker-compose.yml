@@ -1,0 +1,37 @@
+version: "3"
+services:
+  #Mongo Service
+  mongodb:
+    container_name: mongodb
+    image: mongo:latest
+    restart: "on-failure"
+    environment: 
+        MONGO_INITDB_ROOT_USERNAME: root
+        MONGO_INITDB_ROOT_PASSWORD: root
+    ports:
+        - "27017:27017"
+    volumes: 
+        - ./dbdata:/data/db
+    tty: true
+  mysql5.5:
+    image: mysql:5.5
+    container_name: ${MYSQL_CONTAINER_NAME_PREFIX}5.5
+    ports:
+      - 3355:3306
+    environment:
+      - MYSQL_DATABASE=${DB_DATABASE}
+      - MYSQL_USER=${DB_USER}
+      - MYSQL_PASSWORD=${DB_PASSWORD}
+      - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
+  postgres:
+    container_name: postgres_container
+    image: postgres
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-root}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-root}
+      PGDATA: /data/postgres
+    volumes:
+       - ./postgres:/data/postgres
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
